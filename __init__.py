@@ -21,8 +21,10 @@ sys.path.append("D:\Git\Exr2Nuke")
 if "bpy" in locals():
     import imp
     imp.reload(create_1_node)
+    print("Reloaded multifiles")
 else:
     from . import create_1_node
+    print("Imported multifiles")
 
 import bpy   
     
@@ -54,7 +56,7 @@ class ONE_OUTPUT(bpy.types.Operator):
     def execute(self, context):
         
 
-        create_1_node.create_setup(self, context)
+        create_1_node.create_setup()
        # my_group = create_1_node_system(self, context, custom_node_name)
         
         return {'FINISHED'}
