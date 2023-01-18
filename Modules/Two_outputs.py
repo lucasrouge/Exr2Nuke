@@ -79,6 +79,14 @@ def create_setup():
     #Les outputs utiles sont ceux qui sont à la fois activés et qui sont dans la librairie
     outputs_useful = [i for i in outputs_enabled if i in library]
     
+    nombre_light=0
+    for y in outputs_useful:
+        print(library[y]["out"])
+        if library[y]["out"]==["Light"]:
+            nombre_light += 1
+    print(nombre_light)
+    position_crypto=-100-nombre_light*22.5
+    
     
     
 #File Outputs
@@ -105,7 +113,7 @@ def create_setup():
         FO_Crypto_node.label = 'Cryptomatte_exr'
         FO_Crypto_node.use_custom_color = True
         FO_Crypto_node.color = (0.343566, 0.608, 0.178791)   
-        FO_Crypto_node.location = 800,-670
+        FO_Crypto_node.location = 800,position_crypto
         FO_Crypto_node.format.file_format = 'OPEN_EXR_MULTILAYER'
         FO_Crypto_node.format.color_depth = '32'
         FO_Crypto_node.base_path = '//Render/Crypto/{}'.format(file_name) + '_###.exr' #mettre le path du projet

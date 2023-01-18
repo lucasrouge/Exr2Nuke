@@ -1,5 +1,8 @@
 import bpy
+import os
+import json
 from pathlib import Path
+
 
 
 def create_setup():
@@ -19,42 +22,16 @@ def create_setup():
     tree = bpy.context.scene.node_tree
     links = tree.links
 
-        
     # Bibliothèque pour décider comment ranger les passes et si on doit les denoiser
-    library={
-        "Image":{"name": "rgba", "denoise": True},
-        "Alpha":{"name": "alpha", "denoise": False},
-        "Depth":{"name": "depth", "denoise": False},   
-        "Mist":{"name": "mist", "denoise": False},  
-        "Position":{"name": "position", "denoise": False},  
-        "Normal":{"name": "normal", "denoise": False},  
-        "Vector":{"name": "vector", "denoise": False},  
-        "UV":{"name": "uv", "denoise": False},  
-        "DiffDir":{"name": "DiffDir", "denoise": True},  
-        "DiffInd":{"name": "DiffInd", "denoise": True},  
-        "DiffCol":{"name": "DiffCol", "denoise": True},  
-        "GlossDir":{"name": "GlossDir", "denoise": True},  
-        "GlossInd":{"name": "GlossInd", "denoise": True},  
-        "GlossCol":{"name": "GlossCol", "denoise": True},  
-        "TransDir":{"name": "TransDir", "denoise": True},  
-        "TransInd":{"name": "TransInd", "denoise": True},  
-        "TransCol":{"name": "TransCol", "denoise": True},  
-        "VolumeDir":{"name": "VolDir", "denoise": True}, 
-        "VolumeInd":{"name": "VolInd", "denoise": True}, 
-        "Emit":{"name": "emit", "denoise": True}, 
-        "Env":{"name": "env", "denoise": True}, 
-        "AO":{"name": "ao", "denoise": True},
-        "CryptoObject00":{"name": "CryptoObject00", "denoise": False},
-        "CryptoObject01":{"name": "CryptoObject01", "denoise": False},
-        "CryptoObject02":{"name": "CryptoObject02", "denoise": False},
-        "CryptoMaterial00":{"name": "CryptoMaterial00", "denoise": False},
-        "CryptoMaterial01":{"name": "CryptoMaterial01", "denoise": False},
-        "CryptoMaterial02":{"name": "CryptoMaterial02", "denoise": False},
-        "CryptoAsset00":{"name": "CryptoAsset00", "denoise": False},
-        "CryptoAsset01":{"name": "CryptoAsset01", "denoise": False},
-        "CryptoAsset02":{"name": "CryptoAsset02", "denoise": False},                  
-    }
-
+    
+    library={}
+    if bpy.context.scene.render.engine == 'CYCLES':   
+        with open(r"D:\Git\Exr2Nuke\Libraries\Cycles_Node_Library.json", "r") as f:
+            library = json.load(f)
+    elif bpy.context.scene.render.engine == 'BLENDER_EEVEE':     
+        with open(r"D:\Git\Exr2Nuke\Libraries\Eevee_Node_Library.json", "r") as f:
+            library = json.load(f)
+        
 
 
     # On décide si on veut denoiser ou pas, si non on change l'attribut dans la bibliothèque
@@ -99,6 +76,7 @@ def create_setup():
 
     for i in outputs_useful:
         
+            # Création d'un nouvel input dans le File output node
             new_in=FO_node.file_slots.new(name=library[i]["name"])
             
             if library[i]["denoise"]:
@@ -125,7 +103,6 @@ def create_setup():
                     if y.name == library[i]["name"]: 
                         link = links.new(RL_node.outputs[i], y)
                         
-    return {"One output done"}
 
 if __name__ == "__main__":
     create_setup()
