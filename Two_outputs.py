@@ -125,3 +125,4 @@ def create_setup():
                     if y.name == library[i]["name"]: 
                         link = links.new(RL_node.outputs[i], y)
 
+create_setup()
