@@ -124,5 +124,9 @@ def create_setup():
                 for y in FO_node.inputs: 
                     if y.name == library[i]["name"]: 
                         link = links.new(RL_node.outputs[i], y)
+                        
+    return {"One output done"}
 
-create_setup()
+if __name__ == "__main__":
+    create_setup()
+    print(create_setup())

@@ -26,11 +26,13 @@ sys.path.append("D:\Git\Exr2Nuke")
 #    from . import create_1_node
 #    print("Imported multifiles")
 
-
-
-import bpy   
+import bpy
 import One_output, Two_outputs, Three_outputs
-    
+
+
+
+
+
 #CREATE PANEL
 class B2N_MAINPANEL(bpy.types.Panel):
     bl_label = "B2N Panel"
@@ -45,8 +47,8 @@ class B2N_MAINPANEL(bpy.types.Panel):
         #CREATE BUTTONS
         row = layout.row()
         row.operator('node.1_operator', icon='NODE')
-#        row = layout.row()
-#        row.operator('node.2_operator', icon='NODE')
+        row = layout.row()
+        row.operator('node.2_operator', icon='NODE')
         row = layout.row()
         row.operator('node.3_operator', icon='NODE')
             
@@ -61,16 +63,16 @@ class ONE_OUTPUT(bpy.types.Operator):
         
         return {'FINISHED'}
     
-##BUTTON 2
-#class TWO_OUTPUTS(bpy.types.Operator):
-#    bl_label = 'Generate 2 outputs node system'
-#    bl_idname = 'node.2_operator'
-#    
-#    def execute(self, context):
-#        
-#        Two_outputs.create_setup()
-#        
-#        return {'FINISHED'}
+#BUTTON 2
+class TWO_OUTPUTS(bpy.types.Operator):
+    bl_label = 'Generate 2 outputs node system'
+    bl_idname = 'node.2_operator'
+    
+    def execute(self, context):
+        
+        Two_outputs.create_setup()
+        
+        return {'FINISHED'}
 
 #BUTTON 3
 class THREE_OUTPUTS(bpy.types.Operator):
@@ -87,7 +89,7 @@ class THREE_OUTPUTS(bpy.types.Operator):
 def register():
     bpy.utils.register_class(B2N_MAINPANEL)
     bpy.utils.register_class(ONE_OUTPUT)
-#    bpy.utils.register_class(TWO_OUTPUTS)
+    bpy.utils.register_class(TWO_OUTPUTS)
     bpy.utils.register_class(THREE_OUTPUTS)
 
 
@@ -95,7 +97,7 @@ def register():
 def unregister():
     bpy.utils.unregister_class(B2N_MAINPANEL)
     bpy.utils.unregister_class(ONE_OUTPUT)
-#    bpy.utils.unregister_class(TWO_OUTPUTS)
+    bpy.utils.unregister_class(TWO_OUTPUTS)
     bpy.utils.unregister_class(THREE_OUTPUTS)
 
 if __name__ == "__main__":
