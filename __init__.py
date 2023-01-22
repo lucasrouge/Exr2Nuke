@@ -10,24 +10,21 @@ bl_info = {
 }
 
 
-
+import bpy
 import sys
 from pathlib import Path
 
-sys.path.append("D:\Git\Exr2Nuke")
+sys.path.append(r"D:\Lucas\Documents\VIWD\Art\Freelance\2022\Blender to Nuke addon\Git\Exr2Nuke\Modules")
 
 
 #Addon import
-#if "bpy" in locals():
-#    import imp
-#    imp.reload(create_1_node)
-#    print("Reloaded multifiles")
-#else:
-#    from . import create_1_node
-#    print("Imported multifiles")
+from .modules import One_output, Two_outputs, Three_outputs
 
-import bpy
-import One_output, Two_outputs, Three_outputs
+script_directory = bpy.utils.script_path_user()
+print(script_directory)
+
+
+#import One_output, Two_outputs, Three_outputs
 
 
 

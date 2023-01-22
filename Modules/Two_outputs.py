@@ -81,10 +81,8 @@ def create_setup():
     
     nombre_light=0
     for y in outputs_useful:
-        print(library[y]["out"])
         if library[y]["out"]==["Light"]:
             nombre_light += 1
-    print(nombre_light)
     position_crypto=-100-nombre_light*22.5
     
     
