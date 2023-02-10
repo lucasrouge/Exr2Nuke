@@ -3,6 +3,8 @@ import os
 import json
 from pathlib import Path
 
+print("ca")
+
 
 
 def create_setup():

@@ -18,13 +18,13 @@ sys.path.append(r"D:\Lucas\Documents\VIWD\Art\Freelance\2022\Blender to Nuke add
 
 
 #Addon import
-from .modules import One_output, Two_outputs, Three_outputs
+#from .modules import One_output, Two_outputs, Three_outputs
 
 script_directory = bpy.utils.script_path_user()
 print(script_directory)
 
 
-#import One_output, Two_outputs, Three_outputs
+import One_output, Two_outputs, Three_outputs
 
 
 
