@@ -3,7 +3,6 @@ import os
 import json
 from pathlib import Path
 
-print("ca")
 
 
 
@@ -67,8 +66,8 @@ def create_setup():
 
     # Création du File Output node
     FO_node = tree.nodes.new('CompositorNodeOutputFile')
-    FO_node.name = 'File_Output_EXR'
-    FO_node.label = 'File_Output_EXR'
+    FO_node.name = 'File_Output_exr'
+    FO_node.label = 'File_Output_exr'
     FO_node.use_custom_color = True
     FO_node.color = (0.551642, 0.335332, 0.566339)   
     FO_node.location = 800,0
