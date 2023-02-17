@@ -43,7 +43,7 @@ reload(Three_outputs)
 #Fast_selection
 class EXR2NUKE_OP_APPLY_FASTSELECT(bpy.types.Operator):
     bl_idname = "exr2nuke.op_aplly_fastselect"
-    bl_label = "op.apply_fast_select"
+    bl_label = "op_apply_fast_select"
     bl_description = "Use the fast selection button to select favorite passes"
     bl_options = {"REGISTER", "UNDO"}
     
@@ -68,7 +68,7 @@ class EXR2NUKE_OP_APPLY_FASTSELECT(bpy.types.Operator):
 
 class EXR2NUKE_OP_SAVE_FASTSELECT(bpy.types.Operator):
     bl_idname = "exr2nuke.op_save_fast_selection"
-    bl_label = "op.save_fast_select"
+    bl_label = "op_save_fastselect"
     bl_description = "Save the actual selected passes as Fast Selection"
     bl_options = {"REGISTER", "UNDO"}
 
@@ -99,7 +99,7 @@ class EXR2NUKE_OP_SAVE_FASTSELECT(bpy.types.Operator):
 #Generate
 class EXR2NUKE_OP_ONE_OUTPUT(bpy.types.Operator):
     bl_label = 'Generate'
-    bl_idname = 'op.generate_1'
+    bl_idname = 'op_generate_1'
     
     def execute(self, context):
         
@@ -109,7 +109,7 @@ class EXR2NUKE_OP_ONE_OUTPUT(bpy.types.Operator):
     
 class EXR2NUKE_OP_TWO_OUTPUT(bpy.types.Operator):
     bl_label = 'Generate'
-    bl_idname = 'op.generate_2'
+    bl_idname = 'op_generate_2'
     
     def execute(self, context):
         
@@ -119,7 +119,7 @@ class EXR2NUKE_OP_TWO_OUTPUT(bpy.types.Operator):
 
 class EXR2NUKE_OP_THREE_OUTPUT(bpy.types.Operator):
     bl_label = 'Generate'
-    bl_idname = 'op.generate_3'
+    bl_idname = 'op_generate_3'
     
     def execute(self, context):
         
@@ -130,40 +130,55 @@ class EXR2NUKE_OP_THREE_OUTPUT(bpy.types.Operator):
 #PANELS
 
 class EXR2NUKE_MAINPANEL(bpy.types.Panel):
-    bl_label = "Exr 2 nuke Panel"
-    bl_idname = "EXR2NUKE_PT_MAINPANEL"
+    bl_label = "Exr to nuke Panel"
+    bl_idname = "B2N_PT_MAINPANEL"
     bl_space_type = 'PROPERTIES'
     bl_region_type = 'WINDOW'
     bl_context = 'view_layer'
-    bl_order = 0
-     
+    bl_order = 1
+    bl_options = {'DEFAULT_CLOSED'}
+    bl_category = "B2N"
+    
+    
+
     def draw(self, context):
         layout = self.layout
 
 class EXR2NUKE_FASTSELECT_SUBPANEL(bpy.types.Panel):
     bl_label = 'Fast selection panel'
-    bl_idname = 'EXR2NUKE_PT_FASTSELECT'
+    bl_idname = 'B2N_PT_FAST'
     bl_space_type = 'PROPERTIES'
     bl_region_type = 'WINDOW'
     bl_context = 'view_layer'
-    bl_parent_id = 'EXR2NUKE_PT_MAINPANEL'
+    bl_options = {'DEFAULT_CLOSED'}
+    bl_parent_id = 'B2N_PT_MAINPANEL'
+    bl_ui_units_x=0
     bl_order = 0
-
     
     def draw(self, context):
         layout = self.layout 
-        row = layout.row(heading='', align=False)
-        row.alignment = 'Center'.upper()
-        op = row.operator('op.apply_fast_select', text='Apply Fast Selection', icon_value=157, emboss=True, depress=False) 
-        op = row.operator('op.save_fast_select', text='Save Fast Selection Profile', icon_value=157, emboss=True, depress=False) 
+        row_1AFB2 = layout.row(heading='', align=False)
+        row_1AFB2.alert = False
+        row_1AFB2.enabled = True
+        row_1AFB2.active = True
+        row_1AFB2.use_property_split = True
+        row_1AFB2.use_property_decorate = False
+        row_1AFB2.scale_x = 1.4500000476837158
+        row_1AFB2.scale_y = 1.3600000143051147
+        row_1AFB2.alignment = 'Center'.upper()
+        row_1AFB2.operator_context = "INVOKE_DEFAULT" if True else "EXEC_DEFAULT"
+        op = row_1AFB2.operator('b2n.op_fast_selection', text='Apply Fast Selection', icon_value=157, emboss=True, depress=False) 
+        op = row_1AFB2.operator('b2n.op_save_fast_selection', text='Save Fast Selection Profile', icon_value=157, emboss=True, depress=False) 
 
 class EXR2NUKE_DENOISE_SUBPANEL(bpy.types.Panel):
     bl_label = 'Denoise panel'
-    bl_idname = 'EXR2NUKE_PT_DENOISE'
+    bl_idname = 'B2N_PT_DENOISE'
     bl_space_type = 'PROPERTIES'
     bl_region_type = 'WINDOW'
     bl_context = 'view_layer'
-    bl_parent_id = 'EXR2NUKE_PT_MAINPANEL'
+    bl_options = {'DEFAULT_CLOSED'}
+    bl_parent_id = 'B2N_PT_MAINPANEL'
+    bl_ui_units_x=0
     bl_order = 1
     
     
@@ -188,12 +203,12 @@ class EXR2NUKE_DENOISE_SUBPANEL(bpy.types.Panel):
 
 class EXR2NUKE_GENERATE_SUBPANEL(bpy.types.Panel):
     bl_label = 'Generate panel'
-    bl_idname = 'EXR2NUKE_PT_GENERATE'
+    bl_idname = 'B2N_PT_GENERATE'
     bl_space_type = 'PROPERTIES'
     bl_region_type = 'WINDOW'
     bl_context = 'view_layer'
-    bl_parent_id = 'EXR2NUKE_PT_MAINPANEL'
-    bl_order = 2
+    bl_parent_id = 'B2N_PT_MAINPANEL'
+    bl_ui_units_x=0
     
     def draw(self, context):
             layout = self.layout
@@ -208,24 +223,24 @@ class EXR2NUKE_GENERATE_SUBPANEL(bpy.types.Panel):
             
             row = layout.row()
             row.label(text="One Exr")
-            row.operator('op.generate_1', icon='NODE')
+            row.operator('node.1_operator', icon='NODE')
             
             row = layout.row()
             row.label(text="Beauty and Crypto Exrs")
-            row.operator('op.generate_2', icon='NODE')
+            row.operator('node.2_operator', icon='NODE')
             
             row = layout.row()
             row.label(text="Light, Data and Crypto Exrs")
-            row.operator('op.generate_3', icon='NODE')
+            row.operator('node.3_operator', icon='NODE')
  
 class EXR2NUKE_OUTPUT_SUBPANEL(bpy.types.Panel):
     bl_label = 'Output panel'
-    bl_idname = 'EXR2NUKE_PT_OUTPUT'
+    bl_idname = 'B2N_PT_OUTPUT'
     bl_space_type = 'PROPERTIES'
     bl_region_type = 'WINDOW'
     bl_context = 'view_layer'
-    bl_parent_id = 'EXR2NUKE_PT_MAINPANEL'
-    bl_order = 3
+    bl_parent_id = 'B2N_PT_MAINPANEL'
+    bl_ui_units_x=0
     
     def draw(self, context):
         layout = self.layout
@@ -234,10 +249,18 @@ class EXR2NUKE_OUTPUT_SUBPANEL(bpy.types.Panel):
         y=0
         for i in liste_outputs:
             if i in bpy.data.scenes['Scene'].node_tree.nodes:
-                col = layout.column(heading='', align=False)
-                col.alignment = 'Expand'.upper()
-                col.label(text=i +':', icon_value=0)
-                col.prop(bpy.data.scenes['Scene'].node_tree.nodes[i], 'base_path', text='', icon_value=0, emboss=True)
+                col_D70C6 = layout.column(heading='', align=False)
+                col_D70C6.alert = False
+                col_D70C6.enabled = True
+                col_D70C6.active = True
+                col_D70C6.use_property_split = False
+                col_D70C6.use_property_decorate = False
+                col_D70C6.scale_x = 1.0
+                col_D70C6.scale_y = 1.0
+                col_D70C6.alignment = 'Expand'.upper()
+                col_D70C6.operator_context = "INVOKE_DEFAULT" if True else "EXEC_DEFAULT"
+                col_D70C6.label(text=i +':', icon_value=0)
+                col_D70C6.prop(bpy.data.scenes['Scene'].node_tree.nodes[i], 'base_path', text='', icon_value=0, emboss=True)
                 y=y+1
                 
         if y == 0:

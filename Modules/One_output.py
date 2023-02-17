@@ -25,12 +25,13 @@ def create_setup():
 
     # Bibliothèque pour décider comment ranger les passes et si on doit les denoiser
     
-    script_directory = bpy.utils.script_path_user()
-    json_directory = script_directory + r"\addons\Exr2Nuke\libraries"
+#    #script_directory = bpy.utils.script_path_user()
+#    json_directory = script_directory + r"\addons\Exr2Nuke\libraries"
+
+
+    json_directory=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))+'\Libraries'
     Cycles_json_path = json_directory + r"\Cycles_Node_Library.json"
     Eevee_json_path = json_directory + r"\Cycles_Node_Library.json"
-
-
     library={}
     if bpy.context.scene.render.engine == 'CYCLES':   
         with open(Cycles_json_path, "r") as f:
