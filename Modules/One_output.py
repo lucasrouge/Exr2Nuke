@@ -11,6 +11,10 @@ def create_setup():
     # On récupère le nom du fichier
     file_name=bpy.context.blend_data.filepath #On récupère le chemin du fichier sous forme de chaine de caractère
     file_name=Path(file_name).stem #Path le transforme en chemin et stem récupère seulement le nom
+    try :
+        node_name = bpy.data.scenes["Scene"].node_tree.nodes["File_Output_exr"].base_path
+    except:
+        node_name = f"//Render/{file_name}_render_###.exr"
 
     # On active l'utilisation des nodes
     bpy.context.scene.use_nodes = True
@@ -32,6 +36,7 @@ def create_setup():
     json_directory=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))+'\Libraries'
     Cycles_json_path = json_directory + r"\Cycles_Node_Library.json"
     Eevee_json_path = json_directory + r"\Cycles_Node_Library.json"
+    
     library={}
     if bpy.context.scene.render.engine == 'CYCLES':   
         with open(Cycles_json_path, "r") as f:
@@ -74,7 +79,7 @@ def create_setup():
     FO_node.location = 800,0
     FO_node.format.file_format = 'OPEN_EXR_MULTILAYER'
     FO_node.format.color_depth = '32'
-    FO_node.base_path = f"//Render/{file_name}_render_###.exr"
+    FO_node.base_path = node_name
     FO_node.inputs.clear() 
 
 
@@ -114,4 +119,3 @@ def create_setup():
 
 if __name__ == "__main__":
     create_setup()
-    print(create_setup())

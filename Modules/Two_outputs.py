@@ -1,4 +1,6 @@
 import bpy
+import json
+import os
 from pathlib import Path
 
 
@@ -7,6 +9,18 @@ def create_setup():
     # On récupère le nom du fichier
     file_name=bpy.context.blend_data.filepath #On récupère le chemin du fichier sous forme de chaine de caractère
     file_name=Path(file_name).stem #Path le transforme en chemin et stem récupère seulement le nom
+
+    #Sauvegarde du nom des files outputs
+    try :
+        light_data_node_name = bpy.data.scenes["Scene"].node_tree.nodes["Light_Data_exr"].base_path
+    except:
+        light_data_node_name = '//Render/Light_Data/{}'.format(file_name) + '_###.exr' #mettre le path du projet
+
+    try :
+        cryptomattes_node_name = bpy.data.scenes["Scene"].node_tree.nodes["Cryptomatte_exr"].base_path
+    except:
+        cryptomattes_node_name = '//Render/Cryptomatte/{}'.format(file_name) + '_###.exr' #mettre le path du projet
+
 
     # On active l'utilisation des nodes
     bpy.context.scene.use_nodes = True
@@ -19,42 +33,18 @@ def create_setup():
     tree = bpy.context.scene.node_tree
     links = tree.links
 
-        
-    # Bibliothèque pour décider comment ranger les passes et si on doit les denoiser
-    library={
-        "Image":{"name": "rgba", "denoise": True, "out":["Light","Crypto"]},
-        "Alpha":{"name": "alpha", "denoise": False, "out":["Light"]},
-        "Depth":{"name": "Depth", "denoise": False, "out":["Light"]},   
-        "Mist":{"name": "mist", "denoise": False, "out":["Light"]},  
-        "Position":{"name": "position", "denoise": False, "out":["Light"]},  
-        "Normal":{"name": "normal", "denoise": False, "out":["Light"]},  
-        "Vector":{"name": "vector", "denoise": False, "out":["Light"]},  
-        "UV":{"name": "uv", "denoise": False, "out":["Light"]},  
-        "DiffDir":{"name": "DiffDir", "denoise": True, "out":["Light"]},  
-        "DiffInd":{"name": "DiffInd", "denoise": True, "out":["Light"]},  
-        "DiffCol":{"name": "DiffCol", "denoise": True, "out":["Light"]},  
-        "GlossDir":{"name": "GlossDir", "denoise": True, "out":["Light"]},  
-        "GlossInd":{"name": "GlossInd", "denoise": True, "out":["Light"]},  
-        "GlossCol":{"name": "GlossCol", "denoise": True, "out":["Light"]},  
-        "TransDir":{"name": "TransDir", "denoise": True, "out":["Light"]},  
-        "TransInd":{"name": "TransInd", "denoise": True, "out":["Light"]},  
-        "TransCol":{"name": "TransCol", "denoise": True, "out":["Light"]},  
-        "VolumeDir":{"name": "VolDir", "denoise": True, "out":["Light"]}, 
-        "VolumeInd":{"name": "VolInd", "denoise": True, "out":["Light"]}, 
-        "Emit":{"name": "Emit", "denoise": True, "out":["Light"]}, 
-        "Env":{"name": "Env", "denoise": True, "out":["Light"]}, 
-        "AO":{"name": "ao", "denoise": True, "out":["Light"]},
-        "CryptoObject00":{"name": "CryptoObject00", "denoise": False, "out":["Crypto"]},
-        "CryptoObject01":{"name": "CryptoObject01", "denoise": False, "out":["Crypto"]},
-        "CryptoObject02":{"name": "CryptoObject02", "denoise": False, "out":["Crypto"]},
-        "CryptoMaterial00":{"name": "CryptoMaterial00", "denoise": False, "out":["Crypto"]},
-        "CryptoMaterial01":{"name": "CryptoMaterial01", "denoise": False, "out":["Crypto"]},
-        "CryptoMaterial02":{"name": "CryptoMaterial02", "denoise": False, "out":["Crypto"]},
-        "CryptoAsset00":{"name": "CryptoAsset00", "denoise": False, "out":["Crypto"]},
-        "CryptoAsset01":{"name": "CryptoAsset01", "denoise": False, "out":["Crypto"]},
-        "CryptoAsset02":{"name": "CryptoAsset02", "denoise": False, "out":["Crypto"]},                  
-    }
+    #Lecture du fichier JSON pour savoir comment link   
+    json_directory=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))+'\Libraries'
+    Cycles_json_path = json_directory + r"\Cycles_Node_Library.json"
+    Eevee_json_path = json_directory + r"\Cycles_Node_Library.json"
     
+    library={}
+    if bpy.context.scene.render.engine == 'CYCLES':   
+        with open(Cycles_json_path, "r") as f:
+            library = json.load(f)
+    elif bpy.context.scene.render.engine == 'BLENDER_EEVEE':     
+        with open(Eevee_json_path, "r") as f:
+            library = json.load(f)
 
 
     # On décide si on veut denoiser ou pas, si non on change l'attribut dans la bibliothèque
@@ -81,9 +71,9 @@ def create_setup():
     
     nombre_light=0
     for y in outputs_useful:
-        if library[y]["out"]==["Light"]:
+        if library[y]["out"]==["Light"] or library[y]["out"]==["Data"]:
             nombre_light += 1
-    position_crypto=-100-nombre_light*22.5
+    position_crypto=-100-nombre_light*24
     
     
     
@@ -91,14 +81,14 @@ def create_setup():
 
     #Light_exr
     FO_Light_node = tree.nodes.new('CompositorNodeOutputFile')
-    FO_Light_node.name = 'Light_exr'
-    FO_Light_node.label = 'Light_exr'
+    FO_Light_node.name = 'Light_Data_exr'
+    FO_Light_node.label = 'Light_Data_exr'
     FO_Light_node.use_custom_color = True
-    FO_Light_node.color = (0.169093, 0.35699, 0.608)   
+    FO_Light_node.color = (0.608, 0.169093, 0.34445)   
     FO_Light_node.location = 800,0
     FO_Light_node.format.file_format = 'OPEN_EXR_MULTILAYER'
     FO_Light_node.format.color_depth = '16'
-    FO_Light_node.base_path = '//Render/Light/{}'.format(file_name) + '_###.exr' #mettre le path du projet
+    FO_Light_node.base_path = light_data_node_name
     FO_Light_node.inputs.clear() #retire tous les inputs
     
 
@@ -114,7 +104,7 @@ def create_setup():
         FO_Crypto_node.location = 800,position_crypto
         FO_Crypto_node.format.file_format = 'OPEN_EXR_MULTILAYER'
         FO_Crypto_node.format.color_depth = '32'
-        FO_Crypto_node.base_path = '//Render/Crypto/{}'.format(file_name) + '_###.exr' #mettre le path du projet
+        FO_Crypto_node.base_path = cryptomattes_node_name
         FO_Crypto_node.inputs.clear()
     
     
@@ -126,7 +116,7 @@ def create_setup():
     for i in outputs_useful:
         for y in library[i]["out"]:
             if y == "Data":
-                FO_node=FO_Data_node
+                FO_node=FO_Light_node
             elif y == "Light":
                 FO_node=FO_Light_node
             elif (y == "Crypto" and not crypto_exist):
