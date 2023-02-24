@@ -119,7 +119,7 @@ class EXR2NUKE_MAINPANEL(bpy.types.Panel):
         layout = self.layout
 
 class EXR2NUKE_FASTSELECT_SUBPANEL(bpy.types.Panel):
-    bl_label = 'Fast selection panel'
+    bl_label = 'Options'
     bl_idname = 'EXR2NUKE_PT_FASTSELECT'
     bl_space_type = 'PROPERTIES'
     bl_region_type = 'WINDOW'
@@ -132,44 +132,38 @@ class EXR2NUKE_FASTSELECT_SUBPANEL(bpy.types.Panel):
         layout = self.layout 
         row = layout.row(heading='', align=False)
         row.alignment = 'Center'.upper()
-        op = row.operator('op.apply_fast_select', text='Apply Fast Selection', icon_value=157, emboss=True) 
-        op = row.operator('op.save_fast_select', text='Save Fast Selection Profile', icon_value=157, emboss=True) 
+        op = row.operator('op.apply_fast_select', text='Apply Fast Selection', icon='PLUS', emboss=True) 
+        op = row.operator('op.save_fast_select', text='Save Fast Selection Profile', icon='PASTEDOWN', emboss=True) 
 
-class EXR2NUKE_DENOISE_SUBPANEL(bpy.types.Panel):
-    bl_label = 'Denoise panel'
-    bl_idname = 'EXR2NUKE_PT_DENOISE'
-    bl_space_type = 'PROPERTIES'
-    bl_region_type = 'WINDOW'
-    bl_context = 'view_layer'
-    bl_parent_id = 'EXR2NUKE_PT_MAINPANEL'
-    bl_order = 1
-    
- 
-
-    def draw(self, context):
-        layout=self.layout
-        
         if bpy.context.scene.render.engine == 'CYCLES':
 
-            layout.label(text='You are using Cycles passes can be denoised')
-        
-            row = layout.row(heading='', align=False)       
-            row.alert = False
-            row.active = True
-            row.alignment = 'Center'.upper()
-            row.operator_context = "INVOKE_DEFAULT" if True else "EXEC_DEFAULT"
-            if bpy.data.scenes['Scene'].view_layers['ViewLayer'].cycles.denoising_store_passes:
-                row.prop(bpy.data.scenes['Scene'].view_layers['ViewLayer'].cycles, 'denoising_store_passes', text='Passes are denoised.', icon_value=0, emboss=True)
-            else:
-                row.prop(bpy.data.scenes['Scene'].view_layers['ViewLayer'].cycles, 'denoising_store_passes', text='Passes are not denoised.', icon_value=0, emboss=True) 
-            
-            layout.label(text="Don't forget to regenerate the node tree after changing this option", icon_value=2)
+                    
+                    row = layout.row(heading='', align=False)
+                    row.alignment = 'Center'.upper()
+                    row.label(text='You are using Cycles passes can be denoised')
+                
+                    row = layout.row(heading='', align=False)       
+                    row.alert = False
+                    row.active = True
+                    row.alignment = 'Center'.upper()
+                    row.operator_context = "INVOKE_DEFAULT" if True else "EXEC_DEFAULT"
+                    if bpy.data.scenes['Scene'].view_layers['ViewLayer'].cycles.denoising_store_passes:
+                        row.prop(bpy.data.scenes['Scene'].view_layers['ViewLayer'].cycles, 'denoising_store_passes', text='Passes are denoised.', icon_value=0, emboss=True)
+                    else:
+                        row.prop(bpy.data.scenes['Scene'].view_layers['ViewLayer'].cycles, 'denoising_store_passes', text='Passes are not denoised.', icon_value=0, emboss=True) 
+                    
+                    row = layout.row(heading='', align=False)
+                    row.alignment = 'Center'.upper()
+                    row.label(text="Don't forget to regenerate the node tree after changing any option", icon_value=2)
+        else :
+            layout.label(text="You are using Eevee passes can't be denoised")
+
              
         
 
 
 class EXR2NUKE_GENERATE_SUBPANEL(bpy.types.Panel):
-    bl_label = 'Generate panel'
+    bl_label = 'Generate and Output'
     bl_idname = 'EXR2NUKE_PT_GENERATE'
     bl_space_type = 'PROPERTIES'
     bl_region_type = 'WINDOW'
@@ -186,6 +180,7 @@ class EXR2NUKE_GENERATE_SUBPANEL(bpy.types.Panel):
             
             #CREATE BUTTONS
             row = layout.row()
+            row.alignment = 'Center'.upper()
             row.label(text="How many outputs do you want to generate?")
             
             row = layout.row()
@@ -199,31 +194,23 @@ class EXR2NUKE_GENERATE_SUBPANEL(bpy.types.Panel):
             row = layout.row()
             row.operator('op.generate_3', icon='NODE')
             row.alignment = 'Center'.upper()
-         
-class EXR2NUKE_OUTPUT_SUBPANEL(bpy.types.Panel):
-    bl_label = 'Output panel'
-    bl_idname = 'EXR2NUKE_PT_OUTPUT'
-    bl_space_type = 'PROPERTIES'
-    bl_region_type = 'WINDOW'
-    bl_context = 'view_layer'
-    bl_parent_id = 'EXR2NUKE_PT_MAINPANEL'
-    bl_order = 3
-    
-    def draw(self, context):
-        layout = self.layout
-            
-        liste_outputs = ['Light_exr','Data_exr','Light_Data_exr','Cryptomatte_exr' ,'File_Output_exr']
-        y=0
-        for i in liste_outputs:
-            if i in bpy.data.scenes['Scene'].node_tree.nodes:
-                col = layout.column(heading='', align=False)
-                col.alignment = 'Expand'.upper()
-                col.label(text=i +':', icon_value=0)
-                col.prop(bpy.data.scenes['Scene'].node_tree.nodes[i], 'base_path', text='', icon_value=0, emboss=True)
-                y=y+1
+
+            liste_outputs = ['Light_exr','Data_exr','Light_Data_exr','Cryptomatte_exr' ,'File_Output_exr']
+            y=0
+            for i in liste_outputs:
+                if i in bpy.data.scenes['Scene'].node_tree.nodes:
+                    col = layout.column(heading='', align=False)
+                    col.alignment = 'Expand'.upper()
+                    col.label(text=i +':', icon_value=0)
+                    col.prop(bpy.data.scenes['Scene'].node_tree.nodes[i], 'base_path', text='', icon_value=0, emboss=True)
+                    y=y+1
                 
-        if y == 0:
-           layout.label(text='You have to select a method.', icon_value=2)
+            if y == 0:
+                layout.label(text='You have to select a method.', icon_value=2)
+         
+
+            
+        
 
 
 #REGISTER
@@ -237,9 +224,7 @@ def register():
     #PANELS
     bpy.utils.register_class(EXR2NUKE_MAINPANEL)
     bpy.utils.register_class(EXR2NUKE_FASTSELECT_SUBPANEL)
-    bpy.utils.register_class(EXR2NUKE_DENOISE_SUBPANEL)
     bpy.utils.register_class(EXR2NUKE_GENERATE_SUBPANEL)
-    bpy.utils.register_class(EXR2NUKE_OUTPUT_SUBPANEL)
 
 def unregister():
     #OPERATORS
@@ -251,9 +236,7 @@ def unregister():
     #PANELS
     bpy.utils.unregister_class(EXR2NUKE_MAINPANEL)
     bpy.utils.unregister_class(EXR2NUKE_FASTSELECT_SUBPANEL)
-    bpy.utils.unregister_class(EXR2NUKE_DENOISE_SUBPANEL)
     bpy.utils.register_class(EXR2NUKE_GENERATE_SUBPANEL)
-    bpy.utils.register_class(EXR2NUKE_OUTPUT_SUBPANEL)
         
 if __name__ == "__main__":
     register()

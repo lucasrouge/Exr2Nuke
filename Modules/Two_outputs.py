@@ -35,7 +35,7 @@ def create_setup():
 
     #Lecture du fichier JSON pour savoir comment link   
     json_directory=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))+'\Libraries'
-    Cycles_json_path = json_directory + r"\Cycles_Node_Library.json"
+    Cycles_json_path = json_directory + r"\Cycles_Node_Library_2.json"
     Eevee_json_path = json_directory + r"\Cycles_Node_Library.json"
     
     library={}
@@ -71,7 +71,7 @@ def create_setup():
     
     nombre_light=0
     for y in outputs_useful:
-        if library[y]["out"]==["Light"] or library[y]["out"]==["Data"]:
+        if library[y]["out"]==["Light_Data"]:
             nombre_light += 1
     position_crypto=-100-nombre_light*24
     
@@ -115,9 +115,7 @@ def create_setup():
     
     for i in outputs_useful:
         for y in library[i]["out"]:
-            if y == "Data":
-                FO_node=FO_Light_node
-            elif y == "Light":
+            if y == "Light_Data":
                 FO_node=FO_Light_node
             elif (y == "Crypto" and not crypto_exist):
                 break
