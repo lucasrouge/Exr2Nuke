@@ -35,7 +35,7 @@ def create_setup():
 
     json_directory=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))+'\Libraries'
     Cycles_json_path = json_directory + r"\Cycles_Node_Library.json"
-    Eevee_json_path = json_directory + r"\Cycles_Node_Library.json"
+    Eevee_json_path = json_directory + r"\Eevee_Node_Library.json"
     
     library={}
     if bpy.context.scene.render.engine == 'CYCLES':   

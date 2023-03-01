@@ -8,7 +8,7 @@ bl_info = {
     "warning" : "",
     "doc_url": "", 
     "tracker_url": "", 
-    "category" : "Compositing" 
+    "category" : "Render" 
 }
 
 import bpy
@@ -28,16 +28,16 @@ sys.path.append(module_directory)
     
 
 #Addon import
-#from .modules import One_output, Two_outputs, Three_outputs, Fast_selection
+from .modules import One_output, Two_outputs, Three_outputs, Fast_selection
 
 #script_directory = bpy.utils.script_path_user()
 
 
-import One_output, Two_outputs, Three_outputs, Fast_selection
+#import One_output, Two_outputs, Three_outputs, Fast_selection
 reload(One_output)
 reload(Two_outputs)
 reload(Three_outputs)
-reload(Fast_selection)
+#reload(Fast_selection)
 
 
 
@@ -156,7 +156,10 @@ class EXR2NUKE_FASTSELECT_SUBPANEL(bpy.types.Panel):
                     row.alignment = 'Center'.upper()
                     row.label(text="Don't forget to regenerate the node tree after changing any option", icon_value=2)
         else :
-            layout.label(text="You are using Eevee passes can't be denoised")
+            row = layout.row(heading='', align=False)
+            row.alignment = 'Center'.upper()
+            row.label(text="You are using Eevee passes can't be denoised")
+            
 
              
         
@@ -190,23 +193,24 @@ class EXR2NUKE_GENERATE_SUBPANEL(bpy.types.Panel):
             row = layout.row()
             row.operator('op.generate_2', icon='NODE')
             row.alignment = 'Center'.upper()
-                        
-            row = layout.row()
-            row.operator('op.generate_3', icon='NODE')
-            row.alignment = 'Center'.upper()
+
+            if bpy.context.scene.render.engine == 'CYCLES':          
+                row = layout.row()
+                row.operator('op.generate_3', icon='NODE')
+                row.alignment = 'Center'.upper()
 
             liste_outputs = ['Light_exr','Data_exr','Light_Data_exr','Cryptomatte_exr' ,'File_Output_exr']
-            y=0
-            for i in liste_outputs:
-                if i in bpy.data.scenes['Scene'].node_tree.nodes:
-                    col = layout.column(heading='', align=False)
-                    col.alignment = 'Expand'.upper()
-                    col.label(text=i +':', icon_value=0)
-                    col.prop(bpy.data.scenes['Scene'].node_tree.nodes[i], 'base_path', text='', icon_value=0, emboss=True)
-                    y=y+1
-                
-            if y == 0:
-                layout.label(text='You have to select a method.', icon_value=2)
+            try:
+                for i in liste_outputs:
+                    if i in bpy.data.scenes['Scene'].node_tree.nodes:
+                        col = layout.column(heading='', align=False)
+                        col.alignment = 'Expand'.upper()
+                        col.label(text=i +':', icon_value=0)
+                        col.prop(bpy.data.scenes['Scene'].node_tree.nodes[i], 'base_path', text='', icon_value=0, emboss=True)
+            except:
+                row = layout.row()
+                row.alignment = 'Center'.upper()
+                row.label(text='You have to select a method.', icon_value=2)
          
 
             
@@ -236,7 +240,7 @@ def unregister():
     #PANELS
     bpy.utils.unregister_class(EXR2NUKE_MAINPANEL)
     bpy.utils.unregister_class(EXR2NUKE_FASTSELECT_SUBPANEL)
-    bpy.utils.register_class(EXR2NUKE_GENERATE_SUBPANEL)
+    bpy.utils.unregister_class(EXR2NUKE_GENERATE_SUBPANEL)
         
 if __name__ == "__main__":
     register()

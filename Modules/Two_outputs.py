@@ -36,7 +36,7 @@ def create_setup():
     #Lecture du fichier JSON pour savoir comment link   
     json_directory=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))+'\Libraries'
     Cycles_json_path = json_directory + r"\Cycles_Node_Library_2.json"
-    Eevee_json_path = json_directory + r"\Cycles_Node_Library.json"
+    Eevee_json_path = json_directory + r"\Eevee_Node_Library_2.json"
     
     library={}
     if bpy.context.scene.render.engine == 'CYCLES':   
