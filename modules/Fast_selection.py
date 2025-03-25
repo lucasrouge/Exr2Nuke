@@ -16,10 +16,10 @@ Eevee_fast_select_json_path=libraries_directory+'\Eevee_fast_select.json'
 def apply():
     context = bpy.context
     view_layer = context.scene.view_layers["ViewLayer"]
-    if bpy.context.scene.render.engine == 'BLENDER_EEVEE':
-        Fast_select_json_path = Eevee_fast_select_json_path
-    else:
+    if bpy.context.scene.render.engine == 'CYCLES':
         Fast_select_json_path = Cycles_fast_select_json_path
+    else:
+        Fast_select_json_path = Eevee_fast_select_json_path
 
     #lecture du fichier json qui gère le fast selection               
     library={}
@@ -38,10 +38,10 @@ def apply():
 def save(): 
     context = bpy.context
     view_layer = context.scene.view_layers["ViewLayer"] 
-    if bpy.context.scene.render.engine == 'BLENDER_EEVEE':
-        Fast_select_json_path = Eevee_fast_select_json_path
-    else:
+    if bpy.context.scene.render.engine == 'CYCLES':
         Fast_select_json_path = Cycles_fast_select_json_path
+    else:
+        Fast_select_json_path = Eevee_fast_select_json_path
 
     library={}
     with open(Fast_select_json_path, "r") as f:
