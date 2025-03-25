@@ -2,7 +2,7 @@ bl_info = {
     "name" : "Exr 2 Nuke",
     "author" : "Lucas ROUGE, Adrien BLANCHARD", 
     "description" : "A simple way to export Exrs to Nuke.",
-    "blender" : (4, 4, 0),
+    "blender" : (3, 3, 1),
     "version" : (1, 0, 1),
     "location" : "View layer Properties",
     "warning" : "",
