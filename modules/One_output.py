@@ -41,7 +41,7 @@ def create_setup():
     if bpy.context.scene.render.engine == 'CYCLES':   
         with open(Cycles_json_path, "r") as f:
             library = json.load(f)
-    elif bpy.context.scene.render.engine == 'BLENDER_EEVEE':     
+    else:     
         with open(Eevee_json_path, "r") as f:
             library = json.load(f)
         
